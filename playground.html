@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Blockly Playground</title>
+<script src="blockly/blockly_compressed.js"></script>
+<script src="blockly/generators/python.js"></script>
+<script src="blockly/blocks/text.js"></script>
+<script src="blockly/generators/python/text.js"></script>
+<script src="matplotlib_blocks_1.js"></script>
+<script src="matplotlib_generators_1.js"></script>
+<script>
+'use strict';
+var workspace = null;
+var fakeDragStack = [];
+
+function start() {
+  // Parse the URL arguments.
+  var match = location.search.match(/dir=([^&]+)/);
+  var rtl = match && match[1] == 'rtl';
+  document.forms.options.elements.dir.selectedIndex = Number(rtl);
+  var toolbox = getToolboxElement();
+  document.forms.options.elements.toolbox.selectedIndex =
+      Number(toolbox.getElementsByTagName('category').length == 0);
+  match = location.search.match(/side=([^&]+)/);
+  var side = match ? match[1] : 'start';
+  document.forms.options.elements.side.value = side;
+  // Create main workspace.
+  workspace = Blockly.inject('blocklyDiv',
+          {comments: true,
+           disable: true,
+           collapse: true,
+           grid:
+             {spacing: 25,
+              length: 3,
+              colour: '#ccc',
+              snap: true},
+           horizontalLayout: side == 'top' || side == 'bottom',
+           maxBlocks: Infinity,
+           media: 'blockly/media/',
+           readOnly: false,
+           rtl: rtl,
+           scrollbars: true,
+           toolbox: toolbox,
+           toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
+           zoom:
+             {controls: true,
+              wheel: true,
+              startScale: 1.0,
+              maxScale: 4,
+              minScale: .25,
+              scaleSpeed: 1.1}
+          });
+  // Restore previously displayed text.
+  if (sessionStorage) {
+    var text = sessionStorage.getItem('textarea');
+    if (text) {
+      document.getElementById('importExport').value = text;
+    }
+    // Restore event logging state.
+    var state = sessionStorage.getItem('logEvents');
+    logEvents(Boolean(Number(state)));
+  } else {
+    // MSIE 11 does not support sessionStorage on file:// URLs.
+    logEvents(false);
+  }
+  taChange();
+}
+
+function getToolboxElement() {
+  return document.getElementById('toolbox');
+}
+
+function toXml() {
+  var output = document.getElementById('importExport');
+  var xml = Blockly.Xml.workspaceToDom(workspace);
+  output.value = Blockly.Xml.domToPrettyText(xml);
+  output.focus();
+  output.select();
+  taChange();
+}
+
+function fromXml() {
+  var input = document.getElementById('importExport');
+  var xml = Blockly.Xml.textToDom(input.value);
+  Blockly.Xml.domToWorkspace(xml, workspace);
+  taChange();
+}
+
+function toCode(lang) {
+  var output = document.getElementById('importExport');
+  output.value = Blockly[lang].workspaceToCode(workspace);
+  taChange();
+}
+
+// Disable the "Import from XML" button if the XML is invalid.
+// Preserve text between page reloads.
+function taChange() {
+  var textarea = document.getElementById('importExport');
+  if (sessionStorage) {
+    sessionStorage.setItem('textarea', textarea.value);
+  }
+  var valid = true;
+  try {
+    Blockly.Xml.textToDom(textarea.value);
+  } catch (e) {
+    valid = false;
+  }
+  document.getElementById('import').disabled = !valid;
+}
+
+function logEvents(state) {
+  var checkbox = document.getElementById('logCheck');
+  checkbox.checked = state;
+  if (sessionStorage) {
+    sessionStorage.setItem('logEvents', Number(state));
+  }
+  if (state) {
+    workspace.addChangeListener(logger);
+  } else {
+    workspace.removeChangeListener(logger);
+  }
+}
+
+function logger(e) {
+  console.log(e);
+}
+
+</script>
+
+<style>
+html, body {
+  height: 100%;
+}
+body {
+  background-color: #fff;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+h1 {
+  font-weight: normal;
+  font-size: 140%;
+}
+#blocklyDiv {
+  float: right;
+  height: 95%;
+  width: 70%;
+}
+#importExport {
+  font-family: monospace;
+}
+</style>
+</head>
+<body onload="start()">
+
+  <div id="blocklyDiv"></div>
+
+  <h1>Blockly Playground</h1>
+
+  <p><a href="javascript:void(workspace.setVisible(true))">Show</a>
+   - <a href="javascript:void(workspace.setVisible(false))">Hide</a></p>
+
+  <form id="options">
+    <select name="dir" onchange="document.forms.options.submit()">
+      <option value="ltr">LTR</option>
+      <option value="rtl">RTL</option>
+    </select>
+    <select name="toolbox" onchange="document.forms.options.submit()">
+      <option value="categories">Categories</option>
+      <option value="simple">Simple</option>
+    </select>
+    <select name="side" onchange="document.forms.options.submit()">
+      <option value="start">Start</option>
+      <option value="end">End</option>
+      <option value="top">Top</option>
+      <option value="bottom">Bottom</option>
+    </select>
+  </form>
+
+  <p>
+    <input type="button" value="Export to XML" onclick="toXml()">
+    &nbsp;
+    <input type="button" value="Import from XML" onclick="fromXml()" id="import">
+    <br>
+    <input type="button" value="To Python" onclick="toCode('Python')">
+    <br>
+    <textarea id="importExport" style="width: 26%; height: 12em"
+      onchange="taChange();" onkeyup="taChange()"></textarea>
+  </p>
+
+  <p>
+    Log events: &nbsp;
+    <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
+  </p>
+
+  <xml id="toolbox" style="display: none">
+    <block type="create_graph">
+      <value name="NAME">
+        <shadow type="text">
+          <field name="TEXT"></field>
+        </shadow>
+      </value>
+    </block>
+    <block type="set_axis_label">
+      <value name="NAME">
+        <shadow type="text">
+          <field name="TEXT"></field>
+        </shadow>
+      </value>
+    </block>
+    <block type="add_data">
+      <value name="DATA">
+        <shadow type="specify_variable">
+          <field name="VARIABLE_NAME"></field>
+        </shadow>
+      </value>
+    </block>
+    <block type="add_data_two">
+      <value name="DATA_x">
+        <shadow type="specify_variable">
+          <field name="VARIABLE_NAME"></field>
+        </shadow>
+      </value>
+      <value name="DATA_Y">
+        <shadow type="specify_variable">
+          <field name="VARIABLE_NAME"></field>
+        </shadow>
+      </value>
+    </block>
+    <block type="set_axis_limits"></block>
+    <block type="dataseries_set_color"></block>
+    <block type="dataseries_set_linewidth"></block>
+    <block type="dataseries_set_linestyle"></block>
+    <block type="dataseries_set_marker"></block>
+  </xml>
+</body>
+</html>
