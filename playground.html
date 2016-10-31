@@ -51,11 +51,19 @@ function start() {
               minScale: .25,
               scaleSpeed: 1.1}
           });
+  // Set indent levels correctly.
+  Blockly.Python.INDENT = '    ';
   // Restore previously displayed text.
   if (sessionStorage) {
-    var text = sessionStorage.getItem('textarea');
-    if (text) {
-      document.getElementById('importExport').value = text;
+    // var text = sessionStorage.getItem('textarea');
+    // if (text) {
+    //   document.getElementById('importExport').value = text;
+    // }
+    var startingBlocks = sessionStorage.getItem('startingBlocks');
+    if (startingBlocks) {
+      document.getElementById('importExport').value = startingBlocks;
+      fromXml();
+      toCode('Python');
     }
     // Restore event logging state.
     var state = sessionStorage.getItem('logEvents');
@@ -78,6 +86,10 @@ function toXml() {
   output.focus();
   output.select();
   taChange();
+
+  if (sessionStorage) {
+    sessionStorage.setItem('startingBlocks', output.value);
+  }
 }
 
 function fromXml() {
@@ -91,6 +103,12 @@ function toCode(lang) {
   var output = document.getElementById('importExport');
   output.value = Blockly[lang].workspaceToCode(workspace);
   taChange();
+
+  if (sessionStorage) {
+    var xml = Blockly.Xml.workspaceToDom(workspace);
+    var prettyText = Blockly.Xml.domToPrettyText(xml);
+    sessionStorage.setItem('startingBlocks', prettyText);
+  }
 }
 
 // Disable the "Import from XML" button if the XML is invalid.
@@ -218,12 +236,12 @@ h1 {
     <block type="add_data_two">
       <value name="DATA_x">
         <shadow type="specify_variable">
-          <field name="VARIABLE_NAME"></field>
+          <field name="VARIABLE_NAME">list1</field>
         </shadow>
       </value>
       <value name="DATA_Y">
         <shadow type="specify_variable">
-          <field name="VARIABLE_NAME"></field>
+          <field name="VARIABLE_NAME">list2</field>
         </shadow>
       </value>
     </block>
@@ -232,6 +250,10 @@ h1 {
     <block type="dataseries_set_linewidth"></block>
     <block type="dataseries_set_linestyle"></block>
     <block type="dataseries_set_marker"></block>
+    <block type="set_axis_ticks"></block>
+    <block type="create_scale"></block>
+    <block type="pick_scale"></block>
+    <block type="set_y_axis_limits"></block>
   </xml>
 </body>
 </html>
