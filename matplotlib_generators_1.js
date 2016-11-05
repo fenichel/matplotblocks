@@ -1,27 +1,32 @@
 Blockly.Python['create_graph'] = function(block) {
-  var dropdown_num_y_axes = block.getFieldValue('NUM_Y_AXES');
-  var statements_name = Blockly.Python.statementToCode(block, 'NAME');
 
-  // TODO: Assemble Python into code variable.
-  var code = 'figure, axes = plt.subplots()\n';
-  if (dropdown_num_y_axes == '2') {
+  var dropdown_num_y_axes = block.getFieldValue('NUM_Y_AXES');
+  var statements_config_x_axis = Blockly.Python.statementToCode(block, 'CONFIG_X_AXIS');
+  var statements_config_primary_y_axis = Blockly.Python.statementToCode(block, 'CONFIG_PRIMARY_Y_AXIS');
+  var statements_config_secondary_y_axis = Blockly.Python.statementToCode(block, 'CONFIG_SECONDARY_Y_AXIS');
+  var statements_add_data = Blockly.Python.statementToCode(block, 'ADD_DATA');
+
+  var x_axis_config = 'def config_x_axis():\n' +
+      Blockly.Python.INDENT + 'axis = \'x\'\n' +
+      statements_config_x_axis;
+  var primary_y_axis_config = 'def config_primary_y_axis():\n' +
+      Blockly.Python.INDENT + 'axis = \'primary_y\'\n' +
+      statements_config_primary_y_axis;
+  var secondary_y_axis_config = dropdown_num_y_axes == 1 ? '' : 
+      'def config_secondary_y_axis():\n' +
+          Blockly.Python.INDENT + 'axis = \'secondary_y\'\n' +
+          statements_config_secondary_y_axis;
+
+  var code = 'figure, axes = plt.subplots()\n' + 
+      x_axis_config + primary_y_axis_config + secondary_y_axis_config + '\n';
+  if (dropdown_num_y_axes == 2) {
     code += 'secondary_scale = axes.twinx()\n';
   }
-  code += statements_name;
-  return code;
-};
-
-Blockly.Python['set_x_axis_label'] = function(block) {
-  var value_name = Blockly.Python.valueToCode(block, 'NAME', Blockly.Python.ORDER_ATOMIC);
-  // TODO: Assemble Python into code variable.
-  var code = 'axes.set_xlabel(' + value_name + ')\n';
-  return code;
-};
-
-Blockly.Python['set_y_axis_label'] = function(block) {
-  var value_name = Blockly.Python.valueToCode(block, 'NAME', Blockly.Python.ORDER_ATOMIC);
-  // TODO: Assemble Python into code variable.
-  var code = 'axes.set_ylabel(' + value_name + ')\n';
+  code += 'config_x_axis()\n' +
+      'config_primary_y_axis()\n';
+  if (dropdown_num_y_axes == 2) {
+    code += 'config_secondary_y_axis()\n';
+  }
   return code;
 };
 
@@ -62,11 +67,18 @@ Blockly.Python['set_axis_limits'] = function(block) {
 };
 
 Blockly.Python['set_axis_label'] = function(block) {
-  var dropdown_axis = block.getFieldValue('AXIS');
-  var value_name = Blockly.Python.valueToCode(block, 'NAME', Blockly.Python.ORDER_ATOMIC);
-  
-  var code = 'axes.set_' + dropdown_axis + 
-      'label(' + value_name + ')\n';
+
+  var functionName = Blockly.Python.provideFunction_(
+      'set_axis_label',
+      ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(axis, label):',
+      '  if (axis == \'x\'):',
+      '    axes.set_xlabel(label)',
+      '  elif (axis == \'primary_y\'):',
+      '    axes.set_ylabel(label)',
+      '  else:',
+      '    secondary_scale.set_ylabel(label)']);
+  var text_name = block.getFieldValue('NAME');
+  var code = functionName + '(axis, \'' + text_name + '\')\n';
   return code;
 };
 

@@ -1,13 +1,68 @@
 Blockly.Blocks['create_graph'] = {
-  init: function() {
+init: function() {
     this.appendDummyInput()
         .appendField("Create graph with ")
-        .appendField(new Blockly.FieldDropdown([["1 y scale", "1"], ["2 y scales", "2"]]), "NUM_Y_AXES");
-    this.appendStatementInput("NAME")
-        .setCheck(null);
+        .appendField(new Blockly.FieldDropdown(
+              [["1 y scale", "1"], ["2 y scales", "2"]],
+              function(option) {
+                var secondary_axis = (option == '2');
+                this.sourceBlock_.updateShape_(secondary_axis);
+              }
+          ), "NUM_Y_AXES");
+    this.appendStatementInput("CONFIG_X_AXIS")
+        .setCheck(null)
+        .appendField("x axis configuration");
+    this.appendStatementInput("CONFIG_PRIMARY_Y_AXIS")
+        .setCheck(null)
+        .appendField("y axis configuration");
+    this.appendStatementInput("ADD_DATA")
+        .setCheck(null)
+        .appendField("add data:");
     this.setNextStatement(true, null);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
+  },
+  /**
+   * Create XML to represent whether the 'secondary_axis' should be present.
+   * @return {Element} XML storage element.
+   * @this Blockly.Block
+   */
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    var secondary_axis = (this.getFieldValue('NUM_Y_AXES') == '2');
+    container.setAttribute('secondary_axis', secondary_axis);
+    return container;
+  },
+  /**
+   * Parse XML to restore the 'divisorInput'.
+   * @param {!Element} xmlElement XML storage element.
+   * @this Blockly.Block
+   */
+  domToMutation: function(xmlElement) {
+    var secondary_axis = (xmlElement.getAttribute('secondary_axis') == 'true');
+    this.updateShape_(secondary_axis);
+  },
+  /**
+   * Modify this block to have (or not have) an input for configuring the 
+   * secondary y axis.
+   * @param {boolean} secondary_axis True if this should have an input for
+   * configuring the secondary y axis.
+   * @private
+   * @this Blockly.Block
+   */
+  updateShape_: function(secondary_axis) {
+    // Add or remove a statement input Input.
+    var inputExists = this.getInput('CONFIG_SECONDARY_Y_AXIS');
+    if (secondary_axis) {
+      if (!inputExists) {
+        this.appendStatementInput("CONFIG_SECONDARY_Y_AXIS")
+            .setCheck(null)
+            .appendField("secondary y axis configuration");
+        this.moveInputBefore('CONFIG_SECONDARY_Y_AXIS', 'ADD_DATA');
+      }
+    } else if (inputExists) {
+      this.removeInput('CONFIG_SECONDARY_Y_AXIS');
+    }
   }
 };
 
@@ -27,7 +82,7 @@ Blockly.Blocks['set_y_axis_label'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck("String")
-        .appendField("set y axis label");
+        .appendField("set label");
     this.setPreviousStatement(true, "configure_plot");
     this.setNextStatement(true, "configure_plot");
     this.setTooltip('');
@@ -175,23 +230,6 @@ Blockly.Blocks['set_axis_ticks'] = {
   }
 };
 
-Blockly.Blocks['create_scale'] = {
-  init: function() {
-    this.appendDummyInput()
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("create scale")
-        .appendField(new Blockly.FieldTextInput("scale one"), "SCALE_NAME")
-        .appendField("with y limits")
-        .appendField(new Blockly.FieldNumber(0), "Y_MIN")
-        .appendField(",")
-        .appendField(new Blockly.FieldNumber(10), "Y_MAX");
-    this.setPreviousStatement(true, "configure_plot");
-    this.setNextStatement(true, "configure_plot");
-    this.setTooltip('');
-    this.setHelpUrl('http://www.example.com/');
-  }
-};
-
 Blockly.Blocks['pick_scale'] = {
   init: function() {
     this.appendDummyInput()
@@ -242,6 +280,18 @@ Blockly.Blocks['configure_axis'] = {
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("tick frequency")
         .appendField(new Blockly.FieldNumber(0), "TICK_FREQUENCY");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+
+Blockly.Blocks['set_axis_label'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("set label to")
+        .appendField(new Blockly.FieldTextInput(""), "NAME");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setTooltip('');

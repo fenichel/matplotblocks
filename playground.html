@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Blockly Playground</title>
-<script src="blockly/blockly_compressed.js"></script>
+<script src="blockly/blockly_uncompressed.js"></script>
 <script src="blockly/generators/python.js"></script>
 <script src="blockly/blocks/text.js"></script>
 <script src="blockly/generators/python/text.js"></script>
@@ -212,27 +212,8 @@ h1 {
   </p>
 
   <xml id="toolbox" style="display: none">
-    <block type="create_graph">
-      <value name="NAME">
-        <shadow type="text">
-          <field name="TEXT"></field>
-        </shadow>
-      </value>
-    </block>
-    <block type="set_axis_label">
-      <value name="NAME">
-        <shadow type="text">
-          <field name="TEXT"></field>
-        </shadow>
-      </value>
-    </block>
-    <block type="add_data">
-      <value name="DATA">
-        <shadow type="specify_variable">
-          <field name="VARIABLE_NAME"></field>
-        </shadow>
-      </value>
-    </block>
+    <block type="create_graph"></block>
+    <block type="set_axis_label"></block>
     <block type="add_data_two">
       <value name="DATA_x">
         <shadow type="specify_variable">
@@ -245,15 +226,14 @@ h1 {
         </shadow>
       </value>
     </block>
+    <block type="set_axis_ticks"></block>
+    <block type="pick_scale"></block>
+    <block type="set_y_axis_limits"></block>
     <block type="set_axis_limits"></block>
     <block type="dataseries_set_color"></block>
     <block type="dataseries_set_linewidth"></block>
     <block type="dataseries_set_linestyle"></block>
     <block type="dataseries_set_marker"></block>
-    <block type="set_axis_ticks"></block>
-    <block type="create_scale"></block>
-    <block type="pick_scale"></block>
-    <block type="set_y_axis_limits"></block>
   </xml>
 </body>
 </html>
