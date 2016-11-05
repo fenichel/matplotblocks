@@ -10,13 +10,13 @@ init: function() {
               }
           ), "NUM_Y_AXES");
     this.appendStatementInput("CONFIG_X_AXIS")
-        .setCheck(null)
+        .setCheck("config_axis")
         .appendField("x axis configuration");
     this.appendStatementInput("CONFIG_PRIMARY_Y_AXIS")
-        .setCheck(null)
+        .setCheck("config_axis")
         .appendField("y axis configuration");
     this.appendStatementInput("ADD_DATA")
-        .setCheck(null)
+        .setCheck("configure_plot")
         .appendField("add data:");
     this.setNextStatement(true, null);
     this.setTooltip('');
@@ -56,7 +56,7 @@ init: function() {
     if (secondary_axis) {
       if (!inputExists) {
         this.appendStatementInput("CONFIG_SECONDARY_Y_AXIS")
-            .setCheck(null)
+            .setCheck("config_axis")
             .appendField("secondary y axis configuration");
         this.moveInputBefore('CONFIG_SECONDARY_Y_AXIS', 'ADD_DATA');
       }
@@ -135,28 +135,13 @@ Blockly.Blocks['specify_variable'] = {
 Blockly.Blocks['set_axis_limits'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("Set ")
-        .appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]]), "AXIS")
-        .appendField("axis limits to")
+        .appendField("Set limits to")
         .appendField(new Blockly.FieldNumber(0), "LIMIT_1")
         .appendField(",")
-        .appendField(new Blockly.FieldNumber(0), "LIMIT_2");
-    this.setPreviousStatement(true, "configure_plot");
-    this.setNextStatement(true, "configure_plot");
-    this.setTooltip('');
-    this.setHelpUrl('http://www.example.com/');
-  }
-};
-
-Blockly.Blocks['set_axis_label'] = {
-  init: function() {
-    this.appendValueInput("NAME")
-        .setCheck("String")
-        .appendField("set")
-        .appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]]), "AXIS")
-        .appendField("axis label to");
-    this.setPreviousStatement(true, "configure_plot");
-    this.setNextStatement(true, "configure_plot");
+        .appendField(new Blockly.FieldNumber(10), "LIMIT_2");
+    this.setPreviousStatement(true, "config_axis");
+    this.setNextStatement(true, "config_axis");
+    this.setColour(330);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
   }
@@ -219,12 +204,11 @@ Blockly.Blocks['dataseries_set_marker'] = {
 Blockly.Blocks['set_axis_ticks'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("set")
-        .appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]]), "AXIS")
-        .appendField("axis tick frequency to")
+        .appendField("set tick frequency to")
         .appendField(new Blockly.FieldNumber(1), "FREQUENCY");
-    this.setPreviousStatement(true, "configure_plot");
-    this.setNextStatement(true, "configure_plot");
+    this.setPreviousStatement(true, "config_axis");
+    this.setNextStatement(true, "config_axis");
+    this.setColour(330);
     this.setTooltip('');
     this.setHelpUrl('https://stackoverflow.com/questions/12608788/changing-the-tick-frequency-on-x-or-y-axis-in-matplotlib');
   }
@@ -233,8 +217,10 @@ Blockly.Blocks['set_axis_ticks'] = {
 Blockly.Blocks['pick_scale'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("use scale")
-        .appendField(new Blockly.FieldTextInput("scale one"), "SCALE_NAME");
+        .appendField("use")
+        .appendField(new Blockly.FieldDropdown(
+          [["primary", "PRIMARY"], ["secondary", "SECONDARY"]]), "SCALE")
+        .appendField("y scale");
     this.setPreviousStatement(true, "configure_dataseries");
     this.setNextStatement(true, "configure_dataseries");
     this.setColour(120);
@@ -292,8 +278,9 @@ Blockly.Blocks['set_axis_label'] = {
     this.appendDummyInput()
         .appendField("set label to")
         .appendField(new Blockly.FieldTextInput(""), "NAME");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, "config_axis");
+    this.setNextStatement(true, "config_axis");
+    this.setColour(330);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
   }

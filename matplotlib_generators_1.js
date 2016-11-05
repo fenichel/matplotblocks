@@ -8,21 +8,26 @@ Blockly.Python['create_graph'] = function(block) {
 
   var x_axis_config = 'def config_x_axis():\n' +
       Blockly.Python.INDENT + 'axis = \'x\'\n' +
-      statements_config_x_axis;
+      statements_config_x_axis + '\n';
   var primary_y_axis_config = 'def config_primary_y_axis():\n' +
       Blockly.Python.INDENT + 'axis = \'primary_y\'\n' +
-      statements_config_primary_y_axis;
+      statements_config_primary_y_axis + '\n';
   var secondary_y_axis_config = dropdown_num_y_axes == 1 ? '' : 
       'def config_secondary_y_axis():\n' +
           Blockly.Python.INDENT + 'axis = \'secondary_y\'\n' +
-          statements_config_secondary_y_axis;
+          statements_config_secondary_y_axis + '\n';
+  var add_data = 'def add_data():\n' + statements_add_data + '\n';
 
-  var code = 'figure, axes = plt.subplots()\n' + 
-      x_axis_config + primary_y_axis_config + secondary_y_axis_config + '\n';
+  var code = 'figure, primary_scale = plt.subplots()\n';
+
   if (dropdown_num_y_axes == 2) {
-    code += 'secondary_scale = axes.twinx()\n';
+    code += 'secondary_scale = primary_scale.twinx()\n';
   }
-  code += 'config_x_axis()\n' +
+
+  code += add_data;
+  code += x_axis_config + primary_y_axis_config + secondary_y_axis_config + '\n'
+  code += 'add_data()\n' +
+      'config_x_axis()\n' +
       'config_primary_y_axis()\n';
   if (dropdown_num_y_axes == 2) {
     code += 'config_secondary_y_axis()\n';
@@ -32,7 +37,7 @@ Blockly.Python['create_graph'] = function(block) {
 
 Blockly.Python['add_data'] = function(block) {
   var value_data = Blockly.Python.valueToCode(block, 'DATA', Blockly.Python.ORDER_ATOMIC);
-  var code = 'axes.plot(' + value_data + ')\n';
+  var code = 'primary_scale.plot(' + value_data + ')\n';
   return code;
 };
 
@@ -42,9 +47,9 @@ Blockly.Python['add_data_two'] = function(block) {
   var statements_name = Blockly.Python.statementToCode(block, 'NAME');
 
   var code = '\ndef configure_this_line():\n' + 
-      Blockly.Python.INDENT + '# Default scale, if not specified\n' +
       Blockly.Python.INDENT + 'config_object = {}\n' +
-      Blockly.Python.INDENT + 'scale = axes\n' + 
+      Blockly.Python.INDENT + '# Default scale, if not specified\n' +
+      Blockly.Python.INDENT + 'scale = primary_scale\n' + 
       statements_name +
       Blockly.Python.INDENT + 'scale.plot(' + value_data_x + ', ' + value_data_y + ', **config_object)\n' +
       'configure_this_line()\n\n';
@@ -57,24 +62,15 @@ Blockly.Python['specify_variable'] = function(block) {
   return [code, Blockly.Python.ORDER_ATOMIC];
 };
 
-Blockly.Python['set_axis_limits'] = function(block) {
-  var dropdown_axis = block.getFieldValue('AXIS');
-  var number_limit_1 = block.getFieldValue('LIMIT_1');
-  var number_limit_2 = block.getFieldValue('LIMIT_2');
-  var code = 'axes.set_' + dropdown_axis + 
-      'lim([' + number_limit_1 + ', ' + number_limit_2 + '])\n';
-  return code;
-};
-
 Blockly.Python['set_axis_label'] = function(block) {
 
   var functionName = Blockly.Python.provideFunction_(
       'set_axis_label',
       ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(axis, label):',
       '  if (axis == \'x\'):',
-      '    axes.set_xlabel(label)',
+      '    primary_scale.set_xlabel(label)',
       '  elif (axis == \'primary_y\'):',
-      '    axes.set_ylabel(label)',
+      '    primary_scale.set_ylabel(label)',
       '  else:',
       '    secondary_scale.set_ylabel(label)']);
   var text_name = block.getFieldValue('NAME');
@@ -123,11 +119,19 @@ Blockly.Python['dataseries_set_marker'] = function(block) {
 };
 
 Blockly.Python['set_axis_ticks'] = function(block) {
-  var dropdown_axis = block.getFieldValue('AXIS');
+  var functionName = Blockly.Python.provideFunction_(
+    'set_axis_ticks',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(axis, frequency):',
+    '  if (axis == \'x\'):',
+    '    primary_scale.xaxis.set_major_locator(ticker.MultipleLocator(frequency))',
+    '  elif (axis == \'primary_y\'):',
+    '    primary_scale.yaxis.set_major_locator(ticker.MultipleLocator(frequency))',
+    '  else:',
+    '    secondary_scale.yaxis.set_major_locator(ticker.MultipleLocator(frequency))']);
+
   var number_frequency = block.getFieldValue('FREQUENCY');
   // TODO: Import ticker
-  var code = 'axes.' + dropdown_axis +
-      'axis.set_major_locator(ticker.MultipleLocator(' + number_frequency + '))\n';
+  var code = 'set_axis_ticks(axis, ' + number_frequency + ')\n';
   return code;
 };
 
@@ -144,26 +148,31 @@ Blockly.Python['create_scale'] = function(block) {
 };
 
 Blockly.Python['pick_scale'] = function(block) {
-  var text_scale_name = block.getFieldValue('SCALE_NAME');
-  text_scale_name = text_scale_name.replace(' ', '_');
-  // TODO: Assemble Python into code variable.
-  var code = '# Use a non-default scale\n' +
-      'scale = ' + text_scale_name + '\n';
+  var dropdown_scale = block.getFieldValue('SCALE');
+  if (dropdown_scale == 'PRIMARY') {
+    var code = 'scale = primary_scale\n';
+  } else {
+    var code = 'scale = secondary_scale\n';
+  }
   return code;
 };
 
-Blockly.Python['set_y_axis_limits'] = function(block) {
-  var dropdown_scale = block.getFieldValue('SCALE');
+Blockly.Python['set_axis_limits'] = function(block) {
+
+  var functionName = Blockly.Python.provideFunction_(
+    'set_axis_limits',
+    ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(axis, limit1, limit2):',
+    '  if (axis == \'x\'):',
+    '    primary_scale.set_xlim([limit1, limit2])',
+    '  elif (axis == \'primary_y\'):',
+    '    primary_scale.set_ylim([limit1, limit2])',
+    '  else:',
+    '    secondary_scale.set_ylim([limit1, limit2])']);
+
   var number_limit_1 = block.getFieldValue('LIMIT_1');
   var number_limit_2 = block.getFieldValue('LIMIT_2');
   // TODO: Assemble Python into code variable.
-  if (dropdown_scale == 'primary_scale') {
-    var code = 'axes.set_ylim(' + number_limit_1 + ', ' + number_limit_2 + ')\n';
-  } else {
-    var code = 'if (secondary_scale == None):\n' + 
-        Blockly.Python.INDENT + 'secondary_scale = axes.twinx()\n' +
-        'secondary_scale.set_ylim(' + number_limit_1 + ', ' + number_limit_2 + ')\n';
-  }
+  var code = 'set_axis_limits(axis, ' + number_limit_1 + ', ' + number_limit_2 + ')\n';
   return code;
 };
 
