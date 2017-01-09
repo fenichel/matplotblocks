@@ -7,8 +7,9 @@
 <script src="blockly/generators/python.js"></script>
 <script src="blockly/blocks/text.js"></script>
 <script src="blockly/generators/python/text.js"></script>
-<script src="matplotlib_blocks_1.js"></script>
-<script src="matplotlib_generators_1.js"></script>
+<script src="matplotlib_lang.js"></script>
+<script src="matplotlib_blocks_2.js"></script>
+<script src="matplotlib_generators_2.js"></script>
 <script>
 'use strict';
 var workspace = null;
@@ -25,6 +26,11 @@ function start() {
   match = location.search.match(/side=([^&]+)/);
   var side = match ? match[1] : 'start';
   document.forms.options.elements.side.value = side;
+
+  // Inject blocks
+  Blockly.defineBlocksWithJsonArray(block_arr);
+  Blockly.Matplotlib['text'] = Blockly.Python['text'];
+
   // Create main workspace.
   workspace = Blockly.inject('blocklyDiv',
           {comments: true,
@@ -52,7 +58,7 @@ function start() {
               scaleSpeed: 1.1}
           });
   // Set indent levels correctly.
-  Blockly.Python.INDENT = '    ';
+  Blockly.Matplotlib.INDENT = '    ';
   // Restore previously displayed text.
   if (sessionStorage) {
     // var text = sessionStorage.getItem('textarea');
@@ -63,7 +69,7 @@ function start() {
     if (startingBlocks) {
       document.getElementById('importExport').value = startingBlocks;
       fromXml();
-      toCode('Python');
+      toCode('Matplotlib');
     }
     // Restore event logging state.
     var state = sessionStorage.getItem('logEvents');
@@ -200,7 +206,7 @@ h1 {
     &nbsp;
     <input type="button" value="Import from XML" onclick="fromXml()" id="import">
     <br>
-    <input type="button" value="To Python" onclick="toCode('Python')">
+    <input type="button" value="To Python" onclick="toCode('Matplotlib')">
     <br>
     <textarea id="importExport" style="width: 26%; height: 12em"
       onchange="taChange();" onkeyup="taChange()"></textarea>
