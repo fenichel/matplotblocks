@@ -90,6 +90,7 @@ var block_arr = [
   ],
   "previousStatement": null,
   "nextStatement": null,
+  "colour": 330,
   "tooltip": "",
   "helpUrl": ""
 },
@@ -105,6 +106,7 @@ var block_arr = [
   ],
   "previousStatement": null,
   "nextStatement": null,
+  "colour": 330,
   "tooltip": "",
   "helpUrl": ""
 },
@@ -145,6 +147,7 @@ var block_arr = [
   ],
   "previousStatement": "configure_plot",
   "nextStatement": "configure_plot",
+  "colour": 120,
   "tooltip": "",
   "helpUrl": ""
 },
@@ -195,6 +198,7 @@ var block_arr = [
   ],
   "previousStatement": null,
   "nextStatement": null,
+  "colour": 330,
   "tooltip": "",
   "helpUrl": ""
 },
@@ -420,6 +424,7 @@ var block_arr = [
   ],
   "previousStatement": null,
   "nextStatement": null,
+  "colour": 330,
   "tooltip": "",
   "helpUrl": ""
 },
