@@ -10,6 +10,7 @@
 <script src="matplotlib_lang.js"></script>
 <script src="matplotlib_blocks_2.js"></script>
 <script src="matplotlib_generators_2.js"></script>
+<script src="default_xml.js"></script>
 <script>
 'use strict';
 var workspace = null;
@@ -61,15 +62,14 @@ function start() {
   Blockly.Matplotlib.INDENT = '    ';
   // Restore previously displayed text.
   if (sessionStorage) {
-    // var text = sessionStorage.getItem('textarea');
-    // if (text) {
-    //   document.getElementById('importExport').value = text;
-    // }
     var startingBlocks = sessionStorage.getItem('startingBlocks');
     if (startingBlocks) {
       document.getElementById('importExport').value = startingBlocks;
       fromXml();
       toCode('Matplotlib');
+    } else {
+      var inXml = Blockly.Xml.textToDom(defaultXml);
+      Blockly.Xml.domToWorkspace(inXml, workspace);
     }
     // Restore event logging state.
     var state = sessionStorage.getItem('logEvents');
@@ -236,7 +236,6 @@ h1 {
         </shadow>
       </value>
     </block>
-    <block type="pick_scale"></block>
     <block type="dataseries_set_color"></block>
     <block type="dataseries_set_linewidth"></block>
     <block type="dataseries_set_linestyle"></block>

@@ -21,6 +21,7 @@ init: function() {
     this.setNextStatement(true, null);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
+    this.setColour(210)
   },
   /**
    * Create XML to represent whether the 'secondary_axis' should be present.
@@ -225,7 +226,7 @@ var block_arr = [
     {
       "type": "field_number",
       "name": "WIDTH",
-      "value": 0
+      "value": 1
     }
   ],
   "previousStatement": "configure_dataseries",
