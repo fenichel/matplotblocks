@@ -219,7 +219,11 @@ h1 {
 
   <xml id="toolbox" style="display: none">
     <block type="create_graph"></block>
+    <label text="Configure axes"></label>
     <block type="set_axis_label"></block>
+    <block type="set_axis_ticks"></block>
+    <block type="set_axis_limits"></block>
+    <label text="Configure data"></label>
     <block type="add_data_two">
       <value name="DATA_x">
         <shadow type="specify_variable">
@@ -232,8 +236,6 @@ h1 {
         </shadow>
       </value>
     </block>
-    <block type="set_axis_ticks"></block>
-    <block type="set_axis_limits"></block>
     <block type="pick_scale"></block>
     <block type="dataseries_set_color"></block>
     <block type="dataseries_set_linewidth"></block>
