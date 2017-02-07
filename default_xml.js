@@ -1,5 +1,5 @@
 var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
-  '<block type="create_graph" id="_qU**`G._i9a5H-vjl^v" x="-12" y="163">' +
+  '<block type="create_graph" id="_qU**`G._i9a5H-vjl^v" x="12" y="163">' +
     '<mutation secondary_axis="false"></mutation>' +
     '<field name="NUM_Y_AXES">1</field>' +
     '<statement name="CONFIG_X_AXIS">' +
