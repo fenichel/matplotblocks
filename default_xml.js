@@ -21,7 +21,7 @@ var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
     '</statement>' +
     '<statement name="CONFIG_PRIMARY_Y_AXIS">' +
       '<block type="set_axis_label" id="7JW?o8|?//;qPv%gDr{1">' +
-        '<field name="NAME">my first y axis</field>' +
+        '<field name="NAME">myfirst y axis</field>' +
       '</block>' +
     '</statement>' +
     '<statement name="CONFIG_SECONDARY_Y_AXIS">' +
@@ -33,12 +33,12 @@ var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
       '<block type="add_data_two" id="4zes=.CKWJ|V[0fauR@e">' +
         '<value name="DATA_x">' +
           '<shadow type="specify_variable" id="eNl]COXW;Q[0U8_kU5=a">' +
-            '<field name="VARIABLE_NAME">my first big data</field>' +
+            '<field name="VARIABLE_NAME">my_first_big_data</field>' +
           '</shadow>' +
         '</value>' +
         '<value name="DATA_Y">' +
           '<shadow type="specify_variable" id="_NW!WWybWmAdUC3r70*x">' +
-            '<field name="VARIABLE_NAME">my second big data</field>' +
+            '<field name="VARIABLE_NAME">my_second_big_data</field>' +
           '</shadow>' +
         '</value>' +
         '<statement name="NAME">' +
@@ -67,7 +67,7 @@ var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
       '<block type="add_data_two" id="Vgj[gGX/i9R,8[j!f6Ab">' +
         '<value name="DATA_x">' +
           '<shadow type="specify_variable" id=").mB`f%YKc?iivgegzyz">' +
-            '<field name="VARIABLE_NAME">more data!</field>' +
+            '<field name="VARIABLE_NAME">more_data</field>' +
           '</shadow>' +
         '</value>' +
         '<value name="DATA_Y">' +
