@@ -10,6 +10,7 @@
 <script src="matplotlib_lang.js"></script>
 <script src="matplotlib_blocks_2.js"></script>
 <script src="matplotlib_generators_2.js"></script>
+<script src="blockly/msg/messages.js"></script>
 <script src="default_xml.js"></script>
 <script>
 'use strict';
@@ -161,12 +162,15 @@ h1 {
     <br>
     <input type="button" value="To Python" onclick="toCode('Matplotlib')">
     <br>
-    <textarea id="importExport" style="width: 26%; height: 12em"
+    <textarea id="importExport" style="width: 26%; height: 35em"
       onchange="taChange();" onkeyup="taChange()"></textarea>
+
+
   </p>
 
   <xml id="toolbox" style="display: none">
     <block type="create_graph"></block>
+    <block type="create_scatter_plot"></block>
     <label text="Configure axes"></label>
     <block type="set_axis_label"></block>
     <block type="set_axis_ticks"></block>

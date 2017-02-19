@@ -1,7 +1,86 @@
 Blockly.Blocks['create_graph'] = {
 init: function() {
     this.appendDummyInput()
-        .appendField("Create graph with ")
+        .appendField("Create line plot with ")
+        .appendField(new Blockly.FieldDropdown(
+              [["1 y scale", "1"], ["2 y scales", "2"]],
+              function(option) {
+                var secondary_axis = (option == '2');
+                this.sourceBlock_.updateShape_(secondary_axis);
+              }
+          ), "NUM_Y_AXES");
+    this.appendStatementInput("CONFIG_X_AXIS")
+        .setCheck("config_axis")
+        .appendField("x axis configuration");
+    this.appendStatementInput("CONFIG_PRIMARY_Y_AXIS")
+        .setCheck("config_axis")
+        .appendField("y axis configuration");
+    this.appendStatementInput("ADD_DATA_TO_PRIMARY_Y_AXIS")
+        .setCheck("configure_plot")
+        .appendField("add data to primary y axis:");
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+    this.setColour(210)
+  },
+  /**
+   * Create XML to represent whether the 'secondary_axis' should be present.
+   * @return {Element} XML storage element.
+   * @this Blockly.Block
+   */
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    var secondary_axis = (this.getFieldValue('NUM_Y_AXES') == '2');
+    container.setAttribute('secondary_axis', secondary_axis);
+    return container;
+  },
+  /**
+   * Parse XML to restore the 'divisorInput'.
+   * @param {!Element} xmlElement XML storage element.
+   * @this Blockly.Block
+   */
+  domToMutation: function(xmlElement) {
+    var secondary_axis = (xmlElement.getAttribute('secondary_axis') == 'true');
+    this.updateShape_(secondary_axis);
+  },
+  /**
+   * Modify this block to have (or not have) an input for configuring the 
+   * secondary y axis.
+   * @param {boolean} secondary_axis True if this should have an input for
+   * configuring the secondary y axis.
+   * @private
+   * @this Blockly.Block
+   */
+  updateShape_: function(secondary_axis) {
+    // Add or remove a statement input Input.
+    var inputExists = this.getInput('CONFIG_SECONDARY_Y_AXIS');
+    if (secondary_axis) {
+      if (!inputExists) {
+        this.appendStatementInput("CONFIG_SECONDARY_Y_AXIS")
+            .setCheck("config_axis")
+            .appendField("secondary y axis configuration");
+        this.moveInputBefore('CONFIG_SECONDARY_Y_AXIS', 'ADD_DATA_TO_PRIMARY_Y_AXIS');
+      }
+    } else if (inputExists) {
+      this.removeInput('CONFIG_SECONDARY_Y_AXIS');
+    }
+
+    inputExists = this.getInput('ADD_DATA_TO_SECONDARY_Y_AXIS');
+    if (secondary_axis) {
+      if (!inputExists) {
+        this.appendStatementInput("ADD_DATA_TO_SECONDARY_Y_AXIS")
+            .setCheck("configure_plot")
+            .appendField("add data to secondary y axis:");
+      }
+    } else if (inputExists) {
+      this.removeInput('ADD_DATA_TO_SECONDARY_Y_AXIS');
+    }
+  }
+};
+Blockly.Blocks['create_scatter_plot'] = {
+init: function() {
+    this.appendDummyInput()
+        .appendField("Create scatter plot with ")
         .appendField(new Blockly.FieldDropdown(
               [["1 y scale", "1"], ["2 y scales", "2"]],
               function(option) {

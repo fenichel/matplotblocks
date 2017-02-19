@@ -358,7 +358,7 @@ Blockly.Matplotlib.emitLineConfiguration = function(config) {
     var line = ", color=\'" + config["color"] + "\'";
     code += line;
   }
-  if (config["linestyle"]) {
+  if (config["linestyle"] && Blockly.Matplotlib.plotType == "LINE") {
     var line = ", linestyle=\'" + config["linestyle"] + "\'";
     code += line;
   }
@@ -374,13 +374,16 @@ Blockly.Matplotlib.emitLineConfiguration = function(config) {
 };
 
 Blockly.Matplotlib.emitDataConfigurations = function(primary) {
+  var plotCommand = Blockly.Matplotlib.plotType == 'LINE' ? '.plot(' :
+      '.scatter(';
+
   var code = "";
   var axis = primary ? "y1" : "y2";
   var scale = primary ? "primary_scale" : "secondary_scale";
   var configList = Blockly.Matplotlib.dataConfigurations[axis];
   for (var i = 0; i < configList.length; i++) {
     var cur = configList[i];
-    var tmpCode = scale + ".plot(" + cur["x"] + ", " + cur["y"] + 
+    var tmpCode = scale + plotCommand + cur["x"] + ", " + cur["y"] + 
         Blockly.Matplotlib.emitLineConfiguration(cur) + ")\n";
     code += tmpCode; 
   }

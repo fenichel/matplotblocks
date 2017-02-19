@@ -1,4 +1,9 @@
 Blockly.Matplotlib['create_graph'] = function(block) {
+  Blockly.Matplotlib.definitions_['import_matplotlib'] = 'import matplotlib.pyplot as plt';
+  Blockly.Matplotlib.definitions_['import_numpy'] = 'import numpy as np';
+  Blockly.Matplotlib.definitions_['import_ticker'] = 'import matplotlib.ticker as ticker';
+
+  Blockly.Matplotlib.plotType = 'LINE';
 
   var dropdown_num_y_axes = block.getFieldValue('NUM_Y_AXES');
   if (dropdown_num_y_axes == 2) {
@@ -27,10 +32,37 @@ Blockly.Matplotlib['create_graph'] = function(block) {
   return code;
 };
 
-// NOT CURRENTLY USED
-Blockly.Matplotlib['add_data'] = function(block) {
-  var value_data = Blockly.Matplotlib.valueToCode(block, 'DATA', Blockly.Matplotlib.config_objectRDER_ATOMIC);
-  var code = 'primary_scale.plot(' + value_data + ')\n';
+Blockly.Matplotlib['create_scatter_plot'] = function(block) {
+  Blockly.Matplotlib.definitions_['import_matplotlib'] = 'import matplotlib.pyplot as plt';
+  Blockly.Matplotlib.definitions_['import_numpy'] = 'import numpy as np';
+  Blockly.Matplotlib.definitions_['import_ticker'] = 'import matplotlib.ticker as ticker';
+
+  Blockly.Matplotlib.plotType = 'SCATTER';
+  
+  var dropdown_num_y_axes = block.getFieldValue('NUM_Y_AXES');
+  if (dropdown_num_y_axes == 2) {
+    Blockly.Matplotlib.secondaryYAxis = true;
+  }
+  Blockly.Matplotlib.currentAxis = "x";
+  var statements_config_x_axis = Blockly.Matplotlib.statementToCode(block, 'CONFIG_X_AXIS');
+
+  Blockly.Matplotlib.currentAxis = "y1";
+  var statements_config_primary_y_axis = Blockly.Matplotlib.statementToCode(block, 'CONFIG_PRIMARY_Y_AXIS');
+
+  if (Blockly.Matplotlib.secondaryYAxis) {
+    Blockly.Matplotlib.currentAxis = "y2";
+    var statements_config_secondary_y_axis = Blockly.Matplotlib.statementToCode(block, 'CONFIG_SECONDARY_Y_AXIS');
+  }
+  
+  Blockly.Matplotlib.currentAxis = "y1";
+  Blockly.Matplotlib.statementToCode(block, 'ADD_DATA_TO_PRIMARY_Y_AXIS');
+
+  if (Blockly.Matplotlib.secondaryYAxis) {
+    Blockly.Matplotlib.currentAxis = "y2";
+    Blockly.Matplotlib.statementToCode(block, 'ADD_DATA_TO_SECONDARY_Y_AXIS');
+  }
+
+  var code = 'figure, primary_scale = plt.subplots()\n';
   return code;
 };
 
@@ -88,24 +120,6 @@ Blockly.Matplotlib['dataseries_set_linestyle'] = function(block) {
 Blockly.Matplotlib['dataseries_set_marker'] = function(block) {
   var dropdown_marker = block.getFieldValue('MARKER');
   Blockly.Matplotlib.currDataSink["marker"] = dropdown_marker;
-  //var number_marker_size = block.getFieldValue('MARKER_SIZE');
-
-  // if (dropdown_marker) {
-  //   var marker_code = 'config_object[\'marker\'] = \'' + dropdown_marker + '\'\n';
-  // }
-  // if (number_marker_size) {
-  //   var size_code = 'config_object[\'markersize\'] = ' + number_marker_size + '\n';
-  // }
-  // var code;
-  // if (dropdown_marker && number_marker_size) {
-  //   code = marker_code + size_code;
-  // } else if (dropdown_marker) {
-  //   code = marker_code;
-  // } else if (number_marker_size) {
-  //   code = size_code;
-  // }
-  
-  //return code;
   return null;
 };
 
