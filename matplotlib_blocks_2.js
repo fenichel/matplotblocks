@@ -225,7 +225,7 @@ var block_arr = [
     {
       "type": "field_number",
       "name": "WIDTH",
-      "value": 0
+      "value": 1
     }
   ],
   "previousStatement": "configure_dataseries",
