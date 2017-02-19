@@ -21,6 +21,7 @@ init: function() {
     this.setNextStatement(true, null);
     this.setTooltip('');
     this.setHelpUrl('http://www.example.com/');
+    this.setColour(210)
   },
   /**
    * Create XML to represent whether the 'secondary_axis' should be present.
