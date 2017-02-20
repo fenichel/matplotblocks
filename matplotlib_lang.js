@@ -268,6 +268,8 @@ Blockly.Matplotlib.init = function(workspace) {
     "y2": []
   };
 
+  Blockly.Matplotlib.legendConfig = null;
+
   Blockly.Matplotlib.currDataSink = null;
 };
 
@@ -370,7 +372,79 @@ Blockly.Matplotlib.emitLineConfiguration = function(config) {
     var line = ", linewidth=\'" + config["linewidth"] + "\'";
     code += line;
   }
+  if (config["label"]) {
+    var line = ", label=\'" + config["label"] + "\'";
+    code += line;
+  }
   return code;
+};
+
+
+Blockly.Matplotlib.emitTitleConfiguration = function() {
+  var code = '';
+  if (Blockly.Matplotlib.title && Blockly.Matplotlib.title['label']) {
+    code += '\n# Set the plot\'s title\n';
+    code += 'plt.title(\'' + Blockly.Matplotlib.title['label'] + '\'';
+    if (Blockly.Matplotlib.title['position']) {
+      code += ', loc=\'' + Blockly.Matplotlib.title['position'] + '\'';
+    }
+    code += ')\n';
+  }
+  return code;
+};
+
+Blockly.Matplotlib.emitLegendConfiguration = function() {
+  var code = '';
+  var comments = '\n# Configure and add a legend';
+  var kwargs_code = '';
+  if (Blockly.Matplotlib.legendConfig) {
+    if (Blockly.Matplotlib.legendConfig['LOCATION']) {
+      kwargs_code += ', loc=\'' + Blockly.Matplotlib.legendConfig['LOCATION'] + '\'';
+    }
+    if (Blockly.Matplotlib.legendConfig['MARKER_POSITION']) {
+      var markerPos = 
+          Blockly.Matplotlib.legendConfig['MARKER_POSITION'] == 'LEFT' ? 
+          'True' : 'False';
+      kwargs_code += ', markerfirst=' + markerPos;
+    }
+    if (Blockly.Matplotlib.legendConfig['TITLE']) {
+      kwargs_code += ', title=\'' + Blockly.Matplotlib.legendConfig['TITLE'] + '\'';
+    }
+
+    var axisChoice = Blockly.Matplotlib.legendConfig['WHICH_AXES'];
+    if (axisChoice == 'PRIMARY') {
+      code += 'primary_scale.legend(';
+    } else if (axisChoice == 'SECONDARY') {
+      if (!Blockly.Matplotlib.secondaryYAxis) {
+        comments += '# Tried to add a legend for the secondary y axis, but only one y axis has been defined\n';
+        comments += '# Ignoring this command';
+        return comments;
+      } else {
+        code += 'secondary_scale.legend(';
+      }
+    } else if (axisChoice == 'BOTH') {
+      if (!Blockly.Matplotlib.secondaryYAxis) {
+        comments += '# Tried to add a legend for the secondary y axis, but only one y axis has been defined\n';
+        comments += '# Ignoring this command';
+        return comments;
+      } else {
+        code += "# Get all of the lines and labels\n";
+        code += 'primary_legend_lines, primary_legend_labels = primary_scale.get_legend_handles_labels()\n';
+        code += 'secondary_legend_lines, secondary_legend_labels = secondary_scale.get_legend_handles_labels()\n';
+        code += 'all_legend_lines = primary_legend_lines + secondary_legend_lines\n';
+        code += 'all_legend_labels = primary_legend_labels + secondary_legend_labels\n';
+        code += "\n# Add the legend\n";
+        code += 'primary_scale.legend(all_legend_lines, all_legend_labels';
+      }
+    } else {
+      return '';
+    }
+  }
+
+  // Close off the legend() call.
+  code += (kwargs_code + ')\n');
+
+  return comments + '\n' + code;
 };
 
 Blockly.Matplotlib.emitDataConfigurations = function(primary) {
@@ -419,12 +493,14 @@ Blockly.Matplotlib.finish = function(code) {
     baseCode += "secondary_scale = primary_scale.twinx()\n";
   }
 
-  var plotCode = Blockly.Matplotlib.emitDataConfigurations(true) + "\n";
+  var plotCode = "\n" + Blockly.Matplotlib.emitDataConfigurations(true) + "\n";
   if (Blockly.Matplotlib.secondaryYAxis) {
     plotCode += Blockly.Matplotlib.emitDataConfigurations(false)
     plotCode += "\n";
   }
 
+  var legendCode = Blockly.Matplotlib.emitLegendConfiguration() + "\n";
+  var titleCode = Blockly.Matplotlib.emitTitleConfiguration();
   // Clean up temporary data.
   delete Blockly.Matplotlib.definitions_;
   delete Blockly.Matplotlib.functionNames_;
@@ -432,7 +508,7 @@ Blockly.Matplotlib.finish = function(code) {
   var allDefs = imports.join('\n') + '\n\n' + definitions.join('\n\n') +
   		'\n\n';
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + 
-      baseCode + plotCode + axisConfigs;
+      baseCode + titleCode +  plotCode + axisConfigs + legendCode;
 };
 
 /**

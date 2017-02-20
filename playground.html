@@ -170,36 +170,55 @@ h1 {
   </p>
 
   <xml id="toolbox" style="display: none">
+     <category name="Plot" colour="#5b80a5">
     <block type="create_graph"></block>
     <block type="create_scatter_plot"></block>
-    <label text="Configure axes"></label>
-    <block type="set_axis_label"></block>
-    <block type="set_axis_ticks"></block>
-    <block type="set_axis_limits"></block>
-    <label text="Configure data"></label>
+    <block type="set_plot_title">
+      <field name="TITLE">Placeholder title</field>
+      <field name="POSITION">center</field>
+    </block>
+    <block type="add_legend">
+      <field name="WHICH_AXES">PRIMARY</field>
+      <field name="LOCATION">best</field>
+      <field name="MARKER_POSITION">LEFT</field>
+      <field name="TITLE"></field>
+    </block>
+  </category>
+  <category name="Dataseries" colour="#6da55b">
+    <block type="add_data_two"></block>
+    <block type="dataseries_set_linewidth">
+      <field name="WIDTH">0</field>
+    </block>
+    <block type="dataseries_set_linestyle">
+      <field name="STYLE">-</field>
+    </block>
+    <block type="dataseries_set_marker">
+      <field name="MARKER">.</field>
+    </block>
+    <block type="dataseries_set_label">
+      <field name="NAME"></field>
+    </block>
+    <block type="dataseries_set_color">
+      <field name="NAME">#ff0000</field>
+    </block>
     <block type="add_data_two">
-      <value name="DATA_x">
-        <shadow type="specify_variable">
-          <field name="VARIABLE_NAME">list1</field>
-        </shadow>
-      </value>
-      <value name="DATA_Y">
-        <shadow type="specify_variable">
-          <field name="VARIABLE_NAME">list2</field>
-        </shadow>
-      </value>
       <statement name="NAME">
         <block type="dataseries_set_color">
           <field name="NAME">#ff0000</field>
           <next>
             <block type="dataseries_set_linewidth">
-              <field name="WIDTH">1</field>
+              <field name="WIDTH">0</field>
               <next>
                 <block type="dataseries_set_linestyle">
                   <field name="STYLE">-</field>
                   <next>
                     <block type="dataseries_set_marker">
                       <field name="MARKER">.</field>
+                      <next>
+                        <block type="dataseries_set_label">
+                          <field name="NAME"></field>
+                        </block>
+                      </next>
                     </block>
                   </next>
                 </block>
@@ -209,10 +228,19 @@ h1 {
         </block>
       </statement>
     </block>
-    <block type="dataseries_set_color"></block>
-    <block type="dataseries_set_linewidth"></block>
-    <block type="dataseries_set_linestyle"></block>
-    <block type="dataseries_set_marker"></block>
+  </category>
+  <category name="Axis" colour="#a55b5b">
+    <block type="set_axis_label">
+      <field name="NAME"></field>
+    </block>
+    <block type="set_axis_limits">
+      <field name="LIMIT_1">0</field>
+      <field name="LIMIT_2">10</field>
+    </block>
+    <block type="set_axis_ticks">
+      <field name="FREQUENCY">1</field>
+    </block>
+  </category>
   </xml>
 </body>
 </html>

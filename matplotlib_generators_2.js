@@ -38,7 +38,7 @@ Blockly.Matplotlib['create_scatter_plot'] = function(block) {
   Blockly.Matplotlib.definitions_['import_ticker'] = 'import matplotlib.ticker as ticker';
 
   Blockly.Matplotlib.plotType = 'SCATTER';
-  
+
   var dropdown_num_y_axes = block.getFieldValue('NUM_Y_AXES');
   if (dropdown_num_y_axes == 2) {
     Blockly.Matplotlib.secondaryYAxis = true;
@@ -64,6 +64,29 @@ Blockly.Matplotlib['create_scatter_plot'] = function(block) {
 
   var code = 'figure, primary_scale = plt.subplots()\n';
   return code;
+};
+
+Blockly.Matplotlib['add_legend'] = function(block) {
+  var dropdown_which_axes = block.getFieldValue('WHICH_AXES');
+  var dropdown_location = block.getFieldValue('LOCATION');
+  var dropdown_marker_position = block.getFieldValue('MARKER_POSITION');
+  var text_name = block.getFieldValue('TITLE');
+
+  Blockly.Matplotlib.legendConfig = {};
+  Blockly.Matplotlib.legendConfig['WHICH_AXES'] = dropdown_which_axes;
+  Blockly.Matplotlib.legendConfig['MARKER_POSITION'] = dropdown_marker_position;
+  Blockly.Matplotlib.legendConfig['LOCATION'] = dropdown_location;
+  Blockly.Matplotlib.legendConfig['TITLE'] = text_name;
+  return null;
+};
+
+Blockly.Matplotlib['set_plot_title'] = function(block) {
+  var text_name = block.getFieldValue('TITLE');
+  var dropdown_title_position = block.getFieldValue('POSITION');
+  Blockly.Matplotlib.title = {};
+  Blockly.Matplotlib.title['label'] = text_name;
+  Blockly.Matplotlib.title['position'] = dropdown_title_position;
+  return null;
 };
 
 Blockly.Matplotlib['add_data_two'] = function(block) {
@@ -95,25 +118,25 @@ Blockly.Matplotlib['set_axis_label'] = function(block) {
 
 Blockly.Matplotlib['dataseries_set_color'] = function(block) {
   var colour_name = block.getFieldValue('NAME');
-  // var code = 'config_object[\'color\'] = \'' + colour_name + '\'\n';
-  // return code;
   Blockly.Matplotlib.currDataSink["color"] = colour_name;
+  return null;
+};
+
+Blockly.Matplotlib['dataseries_set_label'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  Blockly.Matplotlib.currDataSink["label"] = text_name;
   return null;
 };
 
 Blockly.Matplotlib['dataseries_set_linewidth'] = function(block) {
   var number_width = block.getFieldValue('WIDTH');
   Blockly.Matplotlib.currDataSink["linewidth"] = number_width;
-  // var code = 'config_object[\'linewidth\'] = ' + number_width + '\n';
-  // return code;
   return null;
 };
 
 Blockly.Matplotlib['dataseries_set_linestyle'] = function(block) {
   var dropdown_style = block.getFieldValue('STYLE');
   Blockly.Matplotlib.currDataSink["linestyle"] = dropdown_style;
-  // var code = 'config_object[\'linestyle\'] = \'' + dropdown_style + '\'\n';
-  // return code;
   return null;
 };
 
@@ -125,7 +148,6 @@ Blockly.Matplotlib['dataseries_set_marker'] = function(block) {
 
 Blockly.Matplotlib['set_axis_ticks'] = function(block) {
   var number_frequency = block.getFieldValue('FREQUENCY');
-  // TODO: Import ticker
   var config = Blockly.Matplotlib.axisConfigs[Blockly.Matplotlib.currentAxis];
   config["tick_frequency"] = number_frequency;
   return null;

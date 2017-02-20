@@ -315,6 +315,22 @@ var block_arr = [
   "helpUrl": ""
 },
 {
+  "type": "dataseries_set_label",
+  "message0": "set label to %1",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": ""
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 120,
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
   "type": "dataseries_set_linestyle",
   "message0": "set line style %1",
   "args0": [
@@ -653,4 +669,148 @@ var block_arr = [
   "nextStatement": null,
   "tooltip": "",
   "helpUrl": ""
+},
+{
+  "type": "add_legend",
+  "lastDummyAlign0": "RIGHT",
+  "message0": "add legend for %1 %2 in position %3 %4 marker at %5 %6 title %7",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "WHICH_AXES",
+      "options": [
+        [
+          "primary y axis",
+          "PRIMARY"
+        ],
+        [
+          "secondary y axis",
+          "SECONDARY"
+        ],
+        [
+          "both y axes",
+          "BOTH"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "LOCATION",
+      "options": [
+        [
+          "best",
+          "best"
+        ],
+        [
+          "upper right",
+          "upper right"
+        ],
+        [
+          "upper left",
+          "upper left"
+        ],
+        [
+          "lower left",
+          "lower left"
+        ],
+        [
+          "lower right",
+          "lower right"
+        ],
+        [
+          "right",
+          "right"
+        ],
+        [
+          "center left",
+          "center left"
+        ],
+        [
+          "center right",
+          "center right"
+        ],
+        [
+          "lower center",
+          "lower center"
+        ],
+        [
+          "upper center",
+          "upper center"
+        ],
+        [
+          "center",
+          "center"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "MARKER_POSITION",
+      "options": [
+        [
+          "left",
+          "LEFT"
+        ],
+        [
+          "right",
+          "RIGHT"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_input",
+      "name": "TITLE",
+      "text": ""
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 210,
+  "tooltip": "Add a legend to the plot",
+  "helpUrl": "http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.legend"
+},
+{
+  "type": "set_plot_title",
+  "message0": "set plot title to %1 at %2",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "TITLE",
+      "text": "Placeholder title"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "POSITION",
+      "options": [
+        [
+          "center",
+          "center"
+        ],
+        [
+          "left",
+          "left"
+        ],
+        [
+          "right",
+          "right"
+        ]
+      ]
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 210,
+  "tooltip": "Add a title to the plot",
+  "helpUrl": "http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.title"
 }]
