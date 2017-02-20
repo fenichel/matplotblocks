@@ -173,3 +173,23 @@ Blockly.Matplotlib['configure_axis'] = function(block) {
   var code = '...\n';
   return code;
 };
+
+Blockly.Matplotlib['add_horizontal_line'] = function(block) {
+  var dropdown_axis = block.getFieldValue('AXIS');
+  var dropdown_linestyle = block.getFieldValue('LINESTYLE');
+  var colour_linecolor = block.getFieldValue('LINECOLOR');
+  var number_width  = block.getFieldValue('WIDTH');
+  var number_position = block.getFieldValue('POSITION');
+
+  var lineConfig = [];
+  lineConfig['direction'] = 'horizontal';
+  lineConfig['axis'] = dropdown_axis.toLowerCase();
+  lineConfig['linestyle'] = dropdown_linestyle;
+  lineConfig['linewidth'] = number_width;
+  lineConfig['color'] = colour_linecolor;
+  lineConfig['position'] = number_position;
+
+  Blockly.Matplotlib.axisLines.push(lineConfig);
+  
+  return null;
+};

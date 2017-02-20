@@ -621,4 +621,86 @@ var block_arr = [
   "output": "variable_name",
   "tooltip": "The name of a variable in your python code",
   "helpUrl": ""
+},
+{
+  "type": "add_horizontal_line",
+  "lastDummyAlign0": "RIGHT",
+  "message0": "add a horizontal line to the %1 %2 at position %3 %4 set line style %5 %6 set line color %7 %8 set line width %9",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "AXIS",
+      "options": [
+        [
+          "primary y axis",
+          "PRIMARY"
+        ],
+        [
+          "secondary y axis",
+          "SECONDARY"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_number",
+      "name": "POSITION",
+      "value": 1
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "LINESTYLE",
+      "options": [
+        [
+          "solid",
+          "-"
+        ],
+        [
+          "dashed",
+          "--"
+        ],
+        [
+          "dashdot",
+          "-."
+        ],
+        [
+          "dotted",
+          ":"
+        ],
+        [
+          "don't draw",
+          "None"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_colour",
+      "name": "LINECOLOR",
+      "colour": "#999999"
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_number",
+      "name": "WIDTH",
+      "value": 1
+    }
+  ],
+  "previousStatement": "plot_config",
+  "nextStatement": "plot_config",
+  "colour": 210,
+  "tooltip": "Add a horizontal line to the graph",
+  "helpUrl": "http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axhline"
 }]
