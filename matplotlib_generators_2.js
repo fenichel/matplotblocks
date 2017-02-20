@@ -89,7 +89,7 @@ Blockly.Matplotlib['set_plot_title'] = function(block) {
   return null;
 };
 
-Blockly.Matplotlib['add_data_two'] = function(block) {
+Blockly.Matplotlib['add_dataseries'] = function(block) {
   var value_data_x = Blockly.Matplotlib.valueToCode(block, 'DATA_x', Blockly.Matplotlib.ORDER_ATOMIC);
   var value_data_y = Blockly.Matplotlib.valueToCode(block, 'DATA_Y', Blockly.Matplotlib.ORDER_ATOMIC);
 
