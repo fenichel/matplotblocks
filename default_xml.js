@@ -1,6 +1,6 @@
 
 var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
-  '<block type="create_graph" id="_qU**`G._i9a5H-vjl^v" x="0" y="88">' +
+  '<block type="create_line_plot" id="_qU**`G._i9a5H-vjl^v" x="0" y="88">' +
     '<mutation secondary_axis="true"></mutation>' +
     '<field name="NUM_Y_AXES">2</field>' +
     '<statement name="CONFIG_X_AXIS">' +
@@ -30,7 +30,7 @@ var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
       '</block>' +
     '</statement>' +
     '<statement name="ADD_DATA_TO_PRIMARY_Y_AXIS">' +
-      '<block type="add_data_two" id="4zes=.CKWJ|V[0fauR@e">' +
+      '<block type="add_dataseries" id="4zes=.CKWJ|V[0fauR@e">' +
         '<value name="DATA_x">' +
           '<shadow type="specify_variable" id="eNl]COXW;Q[0U8_kU5=a">' +
             '<field name="VARIABLE_NAME">my_first_big_data</field>' +
@@ -64,7 +64,7 @@ var defaultXml = '<xml xmlns="http://www.w3.org/1999/xhtml">' +
       '</block>' +
     '</statement>' +
     '<statement name="ADD_DATA_TO_SECONDARY_Y_AXIS">' +
-      '<block type="add_data_two" id="Vgj[gGX/i9R,8[j!f6Ab">' +
+      '<block type="add_dataseries" id="Vgj[gGX/i9R,8[j!f6Ab">' +
         '<value name="DATA_x">' +
           '<shadow type="specify_variable" id=").mB`f%YKc?iivgegzyz">' +
             '<field name="VARIABLE_NAME">more_data</field>' +

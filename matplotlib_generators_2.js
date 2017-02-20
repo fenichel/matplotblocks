@@ -1,4 +1,4 @@
-Blockly.Matplotlib['create_graph'] = function(block) {
+Blockly.Matplotlib['create_line_plot'] = function(block) {
   Blockly.Matplotlib.definitions_['import_matplotlib'] = 'import matplotlib.pyplot as plt';
   Blockly.Matplotlib.definitions_['import_numpy'] = 'import numpy as np';
   Blockly.Matplotlib.definitions_['import_ticker'] = 'import matplotlib.ticker as ticker';
@@ -151,28 +151,6 @@ Blockly.Matplotlib['set_axis_ticks'] = function(block) {
   var config = Blockly.Matplotlib.axisConfigs[Blockly.Matplotlib.currentAxis];
   config["tick_frequency"] = number_frequency;
   return null;
-};
-
-Blockly.Matplotlib['create_scale'] = function(block) {
-  var text_scale_name = block.getFieldValue('SCALE_NAME');
-  var number_y_min = block.getFieldValue('Y_MIN');
-  var number_y_max = block.getFieldValue('Y_MAX');
-
-  text_scale_name = text_scale_name.replace(' ', '_');
-
-  var code = text_scale_name + ' = axes.twinx()\n' +
-      text_scale_name + '.set_ylim(' + number_y_min + ', ' + number_y_max + ')\n';
-  return code;
-};
-
-Blockly.Matplotlib['pick_scale'] = function(block) {
-  var dropdown_scale = block.getFieldValue('SCALE');
-  if (dropdown_scale == 'PRIMARY') {
-    var code = 'scale = primary_scale\n';
-  } else {
-    var code = 'scale = secondary_scale\n';
-  }
-  return code;
 };
 
 Blockly.Matplotlib['set_axis_limits'] = function(block) {
