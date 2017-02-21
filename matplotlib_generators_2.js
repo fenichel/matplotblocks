@@ -193,3 +193,21 @@ Blockly.Matplotlib['add_horizontal_line'] = function(block) {
   
   return null;
 };
+
+Blockly.Matplotlib['add_vertical_line'] = function(block) {
+  var dropdown_linestyle = block.getFieldValue('LINESTYLE');
+  var colour_linecolor = block.getFieldValue('LINECOLOR');
+  var number_width  = block.getFieldValue('WIDTH');
+  var number_position = block.getFieldValue('POSITION');
+
+  var lineConfig = [];
+  lineConfig['direction'] = 'vertical';
+  lineConfig['linestyle'] = dropdown_linestyle;
+  lineConfig['linewidth'] = number_width;
+  lineConfig['color'] = colour_linecolor;
+  lineConfig['position'] = number_position;
+
+  Blockly.Matplotlib.axisLines.push(lineConfig);
+  
+  return null;
+};

@@ -703,4 +703,72 @@ var block_arr = [
   "colour": 210,
   "tooltip": "Add a horizontal line to the graph",
   "helpUrl": "http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axhline"
+},
+{
+  "type": "add_vertical_line",
+  "lastDummyAlign0": "RIGHT",
+  "message0": "add a vertical line %1 at position %2 %3 set line style %4 %5 set line color %6 %7 set line width %8",
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_number",
+      "name": "POSITION",
+      "value": 1
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "LINESTYLE",
+      "options": [
+        [
+          "solid",
+          "-"
+        ],
+        [
+          "dashed",
+          "--"
+        ],
+        [
+          "dashdot",
+          "-."
+        ],
+        [
+          "dotted",
+          ":"
+        ],
+        [
+          "don't draw",
+          "None"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_colour",
+      "name": "LINECOLOR",
+      "colour": "#999999"
+    },
+    {
+      "type": "input_dummy",
+      "align": "RIGHT"
+    },
+    {
+      "type": "field_number",
+      "name": "WIDTH",
+      "value": 1
+    }
+  ],
+  "previousStatement": "plot_config",
+  "nextStatement": "plot_config",
+  "colour": 210,
+  "tooltip": "Add a vertical line at the given position on the x axis",
+  "helpUrl": "http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.axvline"
 }]
